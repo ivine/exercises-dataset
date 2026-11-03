@@ -1,0 +1,67 @@
+services:
+  mcp:
+    build:
+      context: .
+    environment:
+      MEDIA_BASE_URL: ${MEDIA_BASE_URL:-http://localhost:13012}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "13011:8000"
+    depends_on:
+      web:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    restart: unless-stopped
+    networks:
+      - exercises
+
+  web:
+    image: nginx:1.27-alpine
+    ports:
+      - "13012:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./setup.html:/usr/share/nginx/html/setup.html:ro
+      - ./data:/usr/share/nginx/html/data:ro
+      - ./images:/usr/share/nginx/html/images:ro
+      - ./videos:/usr/share/nginx/html/videos:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    networks:
+      - exercises
+
+networks:
+  exercises:
+    name: ai_mcp_network
+    driver: bridge

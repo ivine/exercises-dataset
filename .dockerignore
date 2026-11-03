@@ -1,0 +1,17 @@
+.git
+.gitignore
+.kimi-code
+.claude
+.venv
+__pycache__
+*.pyc
+*.zip
+.DS_Store
+images
+videos
+index.html
+setup.html
+README.md
+LICENSE
+NOTICE.md
+compose.yml
