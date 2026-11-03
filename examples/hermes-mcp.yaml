@@ -2,7 +2,7 @@
 # The Hermes container must be attached to the ai_mcp_network Docker network.
 mcp_servers:
   exercises:
-    url: "http://mcp:8000/mcp"
+    url: "http://exercises_dataset_mcp:8000/mcp"
     timeout: 120
     connect_timeout: 30
     supports_parallel_tool_calls: true

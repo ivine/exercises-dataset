@@ -1,5 +1,8 @@
 services:
   mcp:
+    container_name: exercises_dataset_mcp
+    cpus: 1.0
+    mem_limit: 512m
     build:
       context: .
     environment:
@@ -29,6 +32,9 @@ services:
       - exercises
 
   web:
+    container_name: exercises_dataset_web
+    cpus: 0.5
+    mem_limit: 128m
     image: nginx:1.27-alpine
     ports:
       - "13012:80"
